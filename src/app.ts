@@ -6,6 +6,7 @@ import http from "http";
 import History, { IHistory } from "./models/History";
 import connectDB from "./config/dbConn";
 import swaggerUi from 'swagger-ui-express'
+import router from "./routes/Calculator";
 import { swaggerSpec } from "./swagger";
 const PORT = process.env.PORT || 4000;
 
@@ -61,15 +62,7 @@ app.set("io", io)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
-app.use("/", (req, res) => {
-  res.json("Hello World");
-});
-
-
-// mongoose.connection.once("open", () => {
-//   console.log("Connected to MongoDB");
-//   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-// });
+app.use('/', router);
 
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
