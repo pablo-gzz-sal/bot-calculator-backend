@@ -5,6 +5,8 @@ import { Server } from "socket.io";
 import http from "http";
 import History, { IHistory } from "./models/History";
 import connectDB from "./config/dbConn";
+import swaggerUi from 'swagger-ui-express'
+import { swaggerSpec } from "./swagger";
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -18,7 +20,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: `http://localhost:${PORT}`,
     methods: ["GET", "POST"],
   },
 });
@@ -56,9 +58,13 @@ app.set("io", io)
 //   });
 // });
 
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+
 app.use("/", (req, res) => {
   res.json("Hello World");
 });
+
 
 // mongoose.connection.once("open", () => {
 //   console.log("Connected to MongoDB");

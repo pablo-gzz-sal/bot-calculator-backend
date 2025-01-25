@@ -3,6 +3,26 @@ import CalculatorService from "../services/CalculatorService";
 
 class CalculatorController {
   /**
+   * @openapi
+   * /calculate:
+   *   post:
+   *     summary: Perform a calculation
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               command:
+   *                 type: string
+   *     responses:
+   *       200:
+   *         description: Successful calculation
+   *       400:
+   *         description: Calculation error
+   */
+  /**
    * Handles calculation requests.
    */
   static async calculate(req: Request, res: Response, io: any): Promise<void> {
@@ -17,6 +37,18 @@ class CalculatorController {
         .json({ success: false, message: error || "Calculation failed" });
     }
   }
+
+  /**
+   * @openapi
+   * /history:
+   *   get:
+   *     summary: Retrieve calculation history
+   *     responses:
+   *       200:
+   *         description: Successful history retrieval
+   *       500:
+   *         description: Server error
+   */
 
   /**
    * Fetches the calculation history.
