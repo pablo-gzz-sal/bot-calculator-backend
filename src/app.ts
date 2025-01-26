@@ -8,6 +8,7 @@ import connectDB from "./config/dbConn";
 import swaggerUi from 'swagger-ui-express'
 import router from "./routes/Calculator";
 import { swaggerSpec } from "./swagger";
+import CalculatorController from './controllers/CalculatorController';
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -18,47 +19,18 @@ app.use(cors());
 app.use(express.json());
 
 const server = http.createServer(app);
-
 const io = new Server(server, {
   cors: {
     origin: `http://localhost:${PORT}`,
     methods: ["GET", "POST"],
   },
 });
-
 app.set("io", io)
 
-// io.on("connection", async (socket) => {
-//   console.log(`New client connected: ${socket.id}`);
-
-//   socket.on("load_history", async () => {
-//     try {
-//       const historyList = await History.find().sort({ timestamp: 1 });
-//       socket.emit("history_loaded", historyList);
-//     } catch (error) {
-//       console.error("Error loading history:", error);
-//     }
-//   });
-
-//   socket.on("send_history_item", async (historyItem: IHistory) => {
-//     try {
-//       const newHistoryItem = await History.create({
-//         command: historyItem.command,
-//         result: historyItem.result,
-//         createdAt: historyItem.createdAt,
-//       });
-
-//       io.emit("history_item_saved", newHistoryItem);
-//     } catch (error) {
-//       console.error("Error saving history item:", error);
-//     }
-//   });
-
-//   socket.on("disconnect", () => {
-//     console.log(`Client disconnected: ${socket.id}`);
-//   });
-// });
-
+io.on('connection', (socket) => {
+  console.log(`New client connected: ${socket.id}`);
+  CalculatorController.getHistory(socket);
+});
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import CalculatorService from "../services/CalculatorService";
+import { Socket } from "socket.io";
 
 class CalculatorController {
   /**
@@ -25,10 +26,11 @@ class CalculatorController {
   /**
    * Handles calculation requests.
    */
-  static async calculate(req: Request, res: Response, io: any): Promise<void> {
+  static async calculate(req: Request, res: Response): Promise<void> {
     try {
       const { command } = req.body;
       const result = await CalculatorService.calculate(command);
+      const io = req.app.get("io");
       io.emit("calculation_result", { command, result });
       res.status(200).json({ success: true, result });
     } catch (error) {
@@ -53,17 +55,15 @@ class CalculatorController {
   /**
    * Fetches the calculation history.
    */
-  static async getHistory(req: Request, res: Response, io: any): Promise<void> {
-    try {
-      const history = await CalculatorService.getHistory();
-      io.emit("history_loaded", history);
-      res.status(200).json({ success: true, history });
-    } catch (error) {
-      console.error("Error while retrieving history:", error);
-      res
-        .status(500)
-        .json({ success: false, error: "Failed to retrieve history" });
-    }
+  static async getHistory(io: Socket): Promise<void> {
+    io.on("load_history", async () => {
+      try {
+        const history = await CalculatorService.getHistory();
+        io.emit("history_loaded", history);
+      } catch (error) {
+        console.error("Error while retrieving history:", error);
+      }
+    });
   }
 }
 
