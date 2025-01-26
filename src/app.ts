@@ -1,9 +1,7 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
 import { Server } from "socket.io";
 import http from "http";
-import History, { IHistory } from "./models/History";
 import connectDB from "./config/dbConn";
 import swaggerUi from 'swagger-ui-express'
 import router from "./routes/Calculator";
