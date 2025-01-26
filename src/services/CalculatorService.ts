@@ -44,6 +44,12 @@ class CalculatorService {
       const sanitizedExpression = expression
         .replace(/[^-()\d/*+.]/g, "")
         .trim();
+
+      const lastChar = sanitizedExpression.slice(-1);
+      const operators = ["+", "-", "*", "/"];
+      if (operators.includes(lastChar)) {
+        throw new Error("Invalid mathematical expression");
+      }
       return Function(`'use strict'; return (${sanitizedExpression})`)();
     } catch (error) {
       throw new Error("Invalid mathematical expression");
