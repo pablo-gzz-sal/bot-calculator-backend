@@ -34,13 +34,11 @@ The server will run at [http://localhost:4000](http://localhost:4000)
 
 ### Client Emissions:
 
-calculate: Sends a calculation command to the server.
-
 load_history: Requests the history from the server.
 
 ### Server Emissions:
 
-history_item: Sends a single calculation to clients.
+calculation_result: Sends the result of the calculation.
 
 history_loaded: Sends the full history to clients.
 
