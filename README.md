@@ -50,6 +50,8 @@ history_loaded: Sends the full history to clients.
 
 ###  `npm run dev`  Starts the development server.
 
+###  `npm test`  Starts the testing process with Jest.
+
 
 ## Notes
 
